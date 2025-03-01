@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Hero Section -->
+        <div class="col-12 text-center mb-4">
+            <h1 class="display-4">Bienvenido a Movil Start</h1>
+            <p class="lead">Gestiona productos, servicios, pedidos e instalaciones en un solo lugar.</p>
+        </div>
+
+        <!-- Tarjetas de Acceso Rápido -->
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <a href="{% url 'list_productos' %}" class="card text-center shadow-sm p-3">
+                    <i class="bi bi-box h1"></i>
+                    <h5 class="mt-2">Productos</h5>
+                    <p class="text-muted">Administra y visualiza los productos disponibles.</p>
+                </a>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <a href="{% url 'list_servicios' %}" class="card text-center shadow-sm p-3">
+                    <i class="bi bi-tools h1"></i>
+                    <h5 class="mt-2">Servicios</h5>
+                    <p class="text-muted">Consulta y gestiona los servicios ofrecidos.</p>
+                </a>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <a href="{% url 'list_pedidos' %}" class="card text-center shadow-sm p-3">
+                    <i class="bi bi-cart h1"></i>
+                    <h5 class="mt-2">Pedidos</h5>
+                    <p class="text-muted">Gestiona y supervisa los pedidos realizados.</p>
+                </a>
+            </div>
+
+            {% if user.is_superuser or user.tipo_usuario == "administrador" %}
+            <div class="col-md-4 mb-3">
+                <a href="{% url 'list_insumos' %}" class="card text-center shadow-sm p-3">
+                    <i class="bi bi-clipboard-check h1"></i>
+                    <h5 class="mt-2">Insumos</h5>
+                    <p class="text-muted">Monitorea y administra los insumos disponibles.</p>
+                </a>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <a href="{% url 'list_bodegas' %}" class="card text-center shadow-sm p-3">
+                    <i class="bi bi-building h1"></i>
+                    <h5 class="mt-2">Bodegas</h5>
+                    <p class="text-muted">Consulta y administra las bodegas de almacenamiento.</p>
+                </a>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <a href="{% url 'list_instalaciones' %}" class="card text-center shadow-sm p-3">
+                    <i class="bi bi-hammer h1"></i>
+                    <h5 class="mt-2">Instalaciones</h5>
+                    <p class="text-muted">Supervisa las instalaciones en curso.</p>
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Sección de Productos Destacados -->
+        <div class="col-12 my-4">
+            <h3>Productos Destacados</h3>
+        
+            {% if productos_destacados %}
+                <div id="carouselProductos" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        {% for producto in productos_destacados %}
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                {% if producto.imagen %}
+                                    <img src="{{ producto.imagen.url }}" class="d-block w-100" alt="{{ producto.nombre }}">
+                                {% else %}
+                                    <img src="#" class="d-block w-100" alt="Imagen no disponible">
+                                {% endif %}
+                                <div class="carousel-caption d-none d-md-block">
+                                    <h5>{{ producto.nombre }}</h5>
+                                    <p>${{ producto.precio }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselProductos" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselProductos" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    </button>
+                </div>
+            {% else %}
+                <p>No hay productos destacados en este momento.</p>
+            {% endif %}
+        </div>
+        
+        <!-- Gráfico de Stock de Insumos -->
+        {% if user.is_superuser or user.tipo_usuario == "administrador" %}
+        <div class="col-12 my-4">
+            <h3>Estado de Insumos</h3>
+            <canvas id="stockInsumosChart"></canvas>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Script para Gráfico -->
+{% if user.is_superuser or user.tipo_usuario == "administrador" %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('stockInsumosChart').getContext('2d');
+    var stockInsumosChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [{% for insumo in insumos %} "{{ insumo.nombre }}", {% endfor %}],
+            datasets: [{
+                label: 'Cantidad Disponible',
+                data: [{% for insumo in insumos %} {{ insumo.cantidad }}, {% endfor %}],
+                backgroundColor: [
+                    {% for insumo in insumos %}
+                        {% if insumo.cantidad < 30 %}
+                            'rgba(255, 99, 132, 0.7)',
+                        {% else %}
+                            'rgba(54, 162, 235, 0.7)',
+                        {% endif %}
+                    {% endfor %}
+                ],
+                borderColor: 'rgba(0, 0, 0, 0.2)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+{% endif %}
+{% endblock %}
+

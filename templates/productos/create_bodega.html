@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-3">Agregar Nueva Bodega</h2>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="id_nombre" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="id_nombre" name="nombre" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_direccion" class="form-label">Dirección</label>
+                    <input type="text" class="form-control" id="id_direccion" name="direccion" required>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="id_ciudad" class="form-label">Ciudad</label>
+                        <input type="text" class="form-control" id="id_ciudad" name="ciudad" required>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="id_estado" class="form-label">Departamento</label>
+                        <input type="text" class="form-control" id="id_estado" name="estado" required>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="id_codigo_postal" class="form-label">Código Postal</label>
+                        <input type="text" class="form-control" id="id_codigo_postal" name="codigo_postal" required>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                    <a href="{% url 'list_bodegas' %}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

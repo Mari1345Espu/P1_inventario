@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card shadow-lg p-5 w-75 rounded-4">
+        <h2 class="text-center mb-4 fw-bold text-primary">Crear Nuevo Usuario</h2>
+
+        {% if messages %}
+        <div class="alert alert-success text-center" role="alert" id="success-alert">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+        <script>
+            setTimeout(function() {
+                document.getElementById("success-alert").style.display = "none";
+                window.location.href = "{% url 'list_usuarios' %}";
+            }, 2000);
+        </script>
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="fw-bold text-dark">Nombre de usuario:</label>
+                    <input type="text" class="form-control" name="username" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="fw-bold text-dark">Correo electrónico:</label>
+                    <input type="email" class="form-control" name="email" required>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="fw-bold text-dark">Nombre:</label>
+                    <input type="text" class="form-control" name="first_name" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="fw-bold text-dark">Apellido:</label>
+                    <input type="text" class="form-control" name="last_name" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="fw-bold text-dark">Contraseña:</label>
+                    <input type="password" class="form-control" name="password1" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="fw-bold text-dark">Confirmar contraseña:</label>
+                    <input type="password" class="form-control" name="password2" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="fw-bold text-dark">Tipo de usuario:</label>
+                    <select class="form-control" name="tipo_usuario">
+                        <option value="cliente" selected>Cliente</option>
+                        <option value="administrador">Administrador</option>
+                        <option value="repartidor">Repartidor</option>
+                        <option value="cuadrilla">Cuadrilla</option>
+
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="fw-bold text-dark">Foto de perfil:</label>
+                    <input type="file" class="form-control" name="foto_perfil">
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-3 fw-bold btn-lg">
+                <i class="bi bi-person-plus"></i> Crear Usuario
+            </button>
+        </form>
+    </div>
+</div>
+
+<style>
+    body {
+        background: #f5f5dc; /* Fondo beige */
+    }
+    .card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+    }
+    .btn-primary {
+        background:rgb(64, 177, 36);
+        border: none;
+        transition: 0.3s;
+    }
+    .btn-primary:hover {
+        background:rgb(24, 60, 5);
+    }
+</style>
+{% endblock %}
+

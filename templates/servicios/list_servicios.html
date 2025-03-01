@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Lista de Servicios</h2>
+    
+    {% if user.is_authenticated and user.is_superuser or user.tipo_usuario == "administrador" %}
+        <!-- Vista para Administradores -->
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                        <th>Disponibilidad</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for servicio in servicios %}
+                    <tr>
+                        <td>{{ servicio.nombre }}</td>
+                        <td>{{ servicio.descripcion }}</td>
+                        <td>${{ servicio.precio }}</td>
+                        <td>{% if servicio.disponibilidad %}Disponible{% else %}No Disponible{% endif %}</td>
+                        <td>
+                            <a href="{% url 'update_servicio' servicio.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                            <a href="{% url 'delete_servicio' servicio.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <a href="{% url 'create_servicio' %}" class="btn btn-primary mb-3">Agregar Servicio</a>
+    
+    {% else %}
+        <!-- Vista para Clientes -->
+        <div class="row">
+            {% for servicio in servicios %}
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ servicio.nombre }}</h5>
+                        <p class="card-text">{{ servicio.descripcion }}</p>
+                        <p class="text-muted">Precio: ${{ servicio.precio }}</p>
+                        <span class="badge {% if servicio.disponibilidad %}bg-success{% else %}bg-danger{% endif %}">
+                            {% if servicio.disponibilidad %}Disponible{% else %}No Disponible{% endif %}
+                        </span>
+                        {% if servicio.disponibilidad %}
+                            <a href="{% url 'create_instalacion' %}" class="btn btn-info mt-2">Adquirir Servicio</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center text-primary">Lista de Productos</h2>
+
+    {% if user.is_superuser or user.tipo_usuario == "administrador" %}
+        <!-- Tabla para Admin y Administradores -->
+        <table class="table table-striped mt-3">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Referencia</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Bodega</th>
+                    {% if user.is_superuser %}<th>Acciones</th>{% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos %}
+                <tr>
+                    <td>{{ producto.nombre }}</td>
+                    <td>{{ producto.marca }}</td>
+                    <td>{{ producto.modelo }}</td>
+                    <td>{{ producto.referencia }}</td>
+                    <td>${{ producto.precio }}</td>
+                    <td>{{ producto.stock }}</td>
+                    <td>{{ producto.bodega.nombre }}</td>
+                    {% if user.is_superuser %}
+                    <td>
+                        <a href="{% url 'update_producto' producto.id %}" class="btn btn-warning btn-sm">Editar</a>
+                        <a href="{% url 'delete_producto' producto.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    {% elif user.tipo_usuario == "cliente" %}
+        <!-- Catálogo de Productos con opción de Agregar al Carrito -->
+        <div class="row mt-3">
+            {% for producto in productos %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ producto.nombre }}</h5>
+                        <p class="card-text">Marca: {{ producto.marca }}</p>
+                        <p class="card-text">Precio: ${{ producto.precio }}</p>
+                        
+                        <!-- Botón para agregar al carrito -->
+                        <form method="post" action="{% url 'add_carrito' producto.id %}" class="mt-2">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary">Agregar al Carrito</button>
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>    
+
+    {% else %}
+        <!-- Carrusel de Productos para Visitantes con botón de Agregar al Carrito -->
+        <div id="productosCarrusel" class="carousel slide mt-3" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {% for producto in productos %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <div class="d-flex justify-content-center">
+                        <div class="card" style="width: 18rem;">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">{{ producto.nombre }}</h5>
+                                <p class="card-text">Precio: ${{ producto.precio }}</p>
+                                <form method="post" action="{% url 'add_carrito' producto.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-primary">Agregar al Carrito</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <a class="carousel-control-prev" href="#productosCarrusel" role="button" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </a>
+            <a class="carousel-control-next" href="#productosCarrusel" role="button" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </a>
+        </div>
+    {% endif %}
+
+    {% if user.is_superuser or user.tipo_usuario == "administrador" %}
+    <div class="mb-3 text-end">
+        <a href="{% url 'create_producto' %}" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Añadir Producto
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

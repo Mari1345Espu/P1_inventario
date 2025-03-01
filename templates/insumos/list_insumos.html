@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Tabla de insumos -->
+        <div class="col-md-7">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Lista de Insumos</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Cantidad</th>
+                                <th>Descripción</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for insumo in insumos %}
+                            <tr>
+                                <td>{{ insumo.nombre }}</td>
+                                <td>{{ insumo.cantidad }}</td>
+                                <td>{{ insumo.descripcion }}</td>
+                                <td>
+                                    <a href="{% url 'update_insumo' insumo.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                                    <a href="{% url 'delete_insumo' insumo.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <a href="{% url 'create_insumo' %}" class="btn btn-success btn-sm">Agregar </a>
+            </div>
+        </div>
+
+        <!-- Gráfico de reabastecimiento -->
+        <div class="col-md-5">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">Estado de Insumos</h4>
+                </div>
+                <div class="card-body">
+                    <canvas id="reabastecimientoChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script para el gráfico -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var ctx = document.getElementById("reabastecimientoChart").getContext("2d");
+
+        var data = {
+            labels: [
+                "Prioritario Reestock",
+                "Sin Reestock Semanal"
+            ],
+            datasets: [{
+                data: [
+                    {% for insumo in insumos %}
+                        {% if insumo.cantidad < 30 %} 1, {% else %} 0, {% endif %}
+                    {% endfor %}
+                    {% for insumo in insumos %}
+                        {% if insumo.cantidad >= 30 %} 1, {% else %} 0, {% endif %}
+                    {% endfor %}
+                ],
+                backgroundColor: ["#dc3545", "#28a745"],
+                hoverOffset: 4
+            }]
+        };
+
+        var myChart = new Chart(ctx, {
+            type: "pie",
+            data: data,
+        });
+    });
+</script>
+{% endblock %}

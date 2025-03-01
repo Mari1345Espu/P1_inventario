@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-primary text-white text-center py-2 rounded-top">
+                    <h5 class="mb-0">Editar Bodega</h5>
+                </div>
+                <div class="card-body p-3">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="mb-2">
+                            <label for="id_nombre" class="form-label text-dark small fw-semibold">Nombre</label>
+                            <input type="text" name="nombre" id="id_nombre" class="form-control form-control-sm rounded-2 shadow-none" value="{{ form.nombre.value|default_if_none:'' }}" required>
+                        </div>
+
+                        <div class="mb-2">
+                            <label for="id_direccion" class="form-label text-dark small fw-semibold">Dirección</label>
+                            <input type="text" name="direccion" id="id_direccion" class="form-control form-control-sm rounded-2 shadow-none" value="{{ form.direccion.value|default_if_none:'' }}" required>
+                        </div>
+
+                        <div class="mb-2">
+                            <label for="id_ciudad" class="form-label text-dark small fw-semibold">Ciudad</label>
+                            <input type="text" name="ciudad" id="id_ciudad" class="form-control form-control-sm rounded-2 shadow-none" value="{{ form.ciudad.value|default_if_none:'' }}" required>
+                        </div>
+
+                        <div class="mb-2">
+                            <label for="id_estado" class="form-label text-dark small fw-semibold">Estado</label>
+                            <input type="text" name="estado" id="id_estado" class="form-control form-control-sm rounded-2 shadow-none" value="{{ form.estado.value|default_if_none:'' }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_codigo_postal" class="form-label text-dark small fw-semibold">Código Postal</label>
+                            <input type="text" name="codigo_postal" id="id_codigo_postal" class="form-control form-control-sm rounded-2 shadow-none" value="{{ form.codigo_postal.value|default_if_none:'' }}" required>
+                        </div>
+
+                        <div class="d-flex justify-content-end mt-3">
+                            <button type="submit" class="btn btn-success btn-sm shadow-sm me-2">Guardar</button>
+                            <a href="{% url 'list_bodegas' %}" class="btn btn-outline-secondary btn-sm shadow-sm">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+

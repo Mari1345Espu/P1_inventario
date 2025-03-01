@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card shadow p-4 w-75"> <!-- Tarjeta más grande -->
+        <div class="d-flex align-items-center">
+            <img src="{% if user.foto_perfil %}{{ user.foto_perfil.url }}{% else %}https://via.placeholder.com/120{% endif %}" 
+                 class="profile-pic me-3" alt="Foto de perfil">
+            <div>
+                <h3 class="text-dark">{{ user.first_name }} {{ user.last_name }}</h3>
+                <p class="text-muted">@{{ user.username }}</p>
+            </div>
+        </div>
+        <hr>
+        <div>
+            <div class="mb-2">
+                <label class="fw-bold text-dark">Usuario:</label>
+                <p class="text-muted">{{ user.username }}</p>
+            </div>
+            <div class="mb-2">
+                <label class="fw-bold text-dark">Correo:</label>
+                <p class="text-muted">{{ user.email }}</p>
+            </div>
+            <div class="mb-2">
+                <label class="fw-bold text-dark">Tipo de usuario:</label>
+                <p class="text-muted">{{ user.tipo_usuario }}</p>
+            </div>
+        </div>
+        <a href="{% url 'update_profile' %}" class="btn edit-btn w-100 mt-3">
+            <i class="bi bi-pencil-square"></i> Editar perfil
+        </a>
+    </div>
+</div>
+
+<style>
+    body {
+        background: #f5f5dc; /* Beige */
+    }
+    .card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 20px;
+        padding: 30px;
+    }
+    .profile-pic {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #ccc;
+    }
+    .edit-btn {
+        background: #add8e6; /* Azul claro */
+        color: white;
+    }
+    .edit-btn:hover {
+        background: #87CEEB;
+    }
+</style>
+{% endblock %}
+
+

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Lista de Instalaciones</h2>
+
+    {% if user.tipo_usuario == "cliente" %}
+        <a href="{% url 'crear_instalacion' %}" class="btn btn-primary mb-3">Nueva Instalación</a>
+    {% endif %}
+
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Servicio</th>
+                <th>Cliente</th>
+                <th>Fecha de Instalación</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for instalacion in instalaciones %}
+            <tr>
+                <td>{{ instalacion.servicio.nombre }}</td>
+                <td>{{ instalacion.cliente.usuario.username }}</td>
+                <td>{{ instalacion.fecha_instalacion }}</td>
+                <td>{{ instalacion.estado }}</td>
+                <td>
+                    {% if user.tipo_usuario == "cliente" %}
+                        <a href="{% url 'delate_instalacion' instalacion.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+                    {% else %}
+                        <a href="{% url 'update_instalacion' instalacion.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">No hay instalaciones registradas.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+        
+
+   

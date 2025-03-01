@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white text-center">
+            <h4>Agregar Nuevo Producto</h4>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <!-- Nombre -->
+                    <div class="col-md-6">
+                        <label class="form-label">Nombre</label>
+                        {{ form.nombre }}
+                    </div>
+                    
+                    <!-- Marca -->
+                    <div class="col-md-6">
+                        <label class="form-label">Marca</label>
+                        {{ form.marca }}
+                    </div>
+
+                    <!-- Modelo -->
+                    <div class="col-md-6">
+                        <label class="form-label">Modelo</label>
+                        {{ form.modelo }}
+                    </div>
+
+                    <!-- Referencia -->
+                    <div class="col-md-6">
+                        <label class="form-label">Referencia</label>
+                        {{ form.referencia }}
+                    </div>
+
+                    <!-- Presentación -->
+                    <div class="col-md-6">
+                        <label class="form-label">Presentación</label>
+                        {{ form.presentacion }}
+                    </div>
+
+                    <!-- Precio -->
+                    <div class="col-md-6">
+                        <label class="form-label">Precio</label>
+                        {{ form.precio }}
+                    </div>
+
+                    <!-- Stock -->
+                    <div class="col-md-6">
+                        <label class="form-label">Stock</label>
+                        {{ form.stock }}
+                    </div>
+
+                    <!-- Stock Mínimo -->
+                    <div class="col-md-6">
+                        <label class="form-label">Stock Mínimo</label>
+                        {{ form.stock_minimo }}
+                    </div>
+
+                    <!-- Bodega -->
+                    <div class="col-md-12">
+                        <label class="form-label">Bodega</label>
+                        {{ form.bodega }}
+                    </div>
+
+                    <!-- Especificaciones Técnicas -->
+                    <div class="col-md-12">
+                        <label class="form-label">Especificaciones Técnicas</label>
+                        {{ form.especificaciones_tecnicas }}
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-success me-2"><i class="bi bi-check-circle"></i> Guardar</button>
+                    <a href="{% url 'list_productos' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-circle"></i> Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

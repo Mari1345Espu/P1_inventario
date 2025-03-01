@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center">🛒 Carrito de Compras</h2>
+
+    {% if carrito %}
+        <table class="table table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Total</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key, item in carrito.items %}
+                <tr>
+                    <td>{{ item.nombre }}</td>
+                    <td>${{ item.precio }}</td>
+                    <td>
+                        <a href="{% url 'decrease_quantity' key %}" class="btn btn-sm btn-outline-secondary">-</a>
+                        {{ item.cantidad }}
+                        <a href="{% url 'increase_quantity' key %}" class="btn btn-sm btn-outline-secondary">+</a>
+                    </td>
+                    <td>${{ item.cantidad|floatformat:2|add:item.precio }}</td>
+                    <td>
+                        <a href="{% url 'remove_carrito' key %}" class="btn btn-danger btn-sm">Eliminar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <h4 class="text-end">Total: ${{ total }}</h4>
+        <div class="text-end">
+            <a href="{% url 'procesar_pedido' %}" class="btn btn-success">Finalizar Compra</a>
+        </div>
+    {% else %}
+        <p class="text-center">Tu carrito está vacío.</p>
+    {% endif %}
+</div>
+{% endblock %}
